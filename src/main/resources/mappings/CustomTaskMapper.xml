@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dogfood.aa20240808.repository.process.CustomTaskMapper">
+
+    <resultMap id="customTaskResultMap" type="com.dogfood.aa20240808.processV2.system.domain.structure.CustomTask">
+        <id property="taskId" column="taskId" jdbcType="VARCHAR"/>
+        <result property="processInstanceId" column="PROC_INST_ID_" jdbcType="VARCHAR"/>
+        <result property="taskTitle" column="taskTitle" jdbcType="VARCHAR"/>
+        <result property="procInstTitle" column="procInstTitle" jdbcType="VARCHAR"/>
+        <result property="procDefTitle" column="procDefTitle" jdbcType="VARCHAR"/>
+        <result property="procInstInitiator" column="START_USER_ID_" jdbcType="VARCHAR"/>
+        <result property="procInstStartTime" column="START_TIME_" jdbcType="VARCHAR"/>
+        <result property="candidators" column="USER_ID_" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectCustomRunTaskList" resultMap="customTaskResultMap"
+            parameterType="com.dogfood.aa20240808.processV2.system.domain.structure.CustomTaskQuery">
+        SELECT task.ID_ as taskId,task.NAME_ as taskTitle,task.PROC_INST_ID_, instance.NAME_ as procInstTitle
+                ,instance.START_USER_ID_, instance.START_TIME_,instance.PROC_DEF_ID_,def.NAME_ as procDefTitle
+        FROM ${process_table_prefix}ACT_RU_TASK task
+        left join ${process_table_prefix}ACT_RU_IDENTITYLINK link on link.TASK_ID_ = task.ID_
+        left join ${process_table_prefix}ACT_HI_PROCINST instance on task.PROC_INST_ID_ = instance.ID_
+        left join ${process_table_prefix}ACT_RE_PROCDEF def on instance.PROC_DEF_ID_ = def.ID_
+        <where>
+            task.CATEGORY_ in  ('ApprovalTask', 'SubmitTask' , 'InitiateTask')
+            <if test="userName != null">
+                <choose>
+                    <when test="finished !=null and finished">
+                        and task.ASSIGNEE_ = #{userName}
+                    </when>
+                    <otherwise>
+                        AND link.TYPE_ = 'candidate' AND link.USER_ID_ = #{userName}
+                        and task.ASSIGNEE_ is null
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="procDefKey != null">
+                and def.KEY_ = #{procDefKey}
+            </if>
+            <if test="procInstInitiator != null">
+                and instance.START_USER_ID_ = #{procInstInitiator}
+            </if>
+            <if test="procInstStartTimeBefore != null">
+                and instance.START_TIME_ <![CDATA[ <= ]]> #{procInstStartTimeBefore}
+            </if>
+            <if test="procInstStartTimeAfter != null">
+                and instance.START_TIME_ <![CDATA[ >= ]]>  #{procInstStartTimeAfter}
+            </if>
+        </where>
+        order by task.CREATE_TIME_ desc
+        <if test="offset != null and size != null">
+         LIMIT #{offset}, #{size}
+        </if>
+    </select>
+
+    <select id="countRun" resultType="java.lang.Long"
+            parameterType="com.dogfood.aa20240808.processV2.system.domain.structure.CustomTaskQuery">
+
+        select count(distinct TASK_ID_) as total
+        FROM ${process_table_prefix}ACT_RU_TASK task
+        left join ${process_table_prefix}ACT_RU_IDENTITYLINK link on link.TASK_ID_ = task.ID_
+        left join ${process_table_prefix}ACT_HI_PROCINST instance on task.PROC_INST_ID_ = instance.ID_
+        left join ${process_table_prefix}ACT_RE_PROCDEF def on instance.PROC_DEF_ID_ = def.ID_
+        <where>
+            task.CATEGORY_ in  ('ApprovalTask', 'SubmitTask' , 'InitiateTask')
+            <if test="userName != null">
+                 and link.TYPE_ = 'candidate' and link.USER_ID_ = #{userName}
+                 and task.ASSIGNEE_ is null
+            </if>
+            <if test="procDefKey != null">
+                and def.KEY_ = #{procDefKey}
+            </if>
+            <if test="procInstInitiator != null">
+                and instance.START_USER_ID_ = #{procInstInitiator}
+            </if>
+            <if test="procInstStartTimeBefore != null">
+                and instance.START_TIME_ <![CDATA[ <= ]]> #{procInstStartTimeBefore}
+            </if>
+            <if test="procInstStartTimeAfter != null">
+                and instance.START_TIME_ <![CDATA[ >= ]]>  #{procInstStartTimeAfter}
+            </if>
+        </where>
+    </select>
+    <select id="selectCustomTaskList" resultMap="customTaskResultMap"
+            parameterType="com.dogfood.aa20240808.processV2.system.domain.structure.CustomTaskQuery">
+        select distinct task.ID_ as taskId,task.START_TIME_,task.NAME_ as taskTitle,task.PROC_INST_ID_, instance.NAME_ as procInstTitle, def.NAME_ as
+        procDefTitle,instance.START_USER_ID_, instance.START_TIME_,task.ASSIGNEE_ as USER_ID_
+        from ${process_table_prefix}ACT_HI_TASKINST task
+        left join ${process_table_prefix}ACT_HI_PROCINST instance on task.PROC_INST_ID_ = instance.ID_
+        left join ${process_table_prefix}ACT_RE_PROCDEF def on instance.PROC_DEF_ID_ = def.ID_
+        <where>
+            task.CATEGORY_ in  ('ApprovalTask', 'SubmitTask' )
+            <choose>
+                <when test="finished !=null and finished">
+                    and task.END_TIME_ is not null and (task.DELETE_REASON_ = '' or task.DELETE_REASON_ is null)
+                </when>
+                <otherwise>
+                    and task.END_TIME_ is null
+                </otherwise>
+            </choose>
+            <if test="userName != null">
+                 <choose>
+                     <when test="finished !=null and finished">
+                         and task.ASSIGNEE_ = #{userName}
+                     </when>
+                     <otherwise>
+                        AND task.ID_ IN (
+                         SELECT TASK_ID_
+                         FROM ${process_table_prefix}ACT_HI_IDENTITYLINK
+                         WHERE TYPE_ = 'candidate' AND USER_ID_ = #{userName}
+                        )
+                        and task.ASSIGNEE_ is null
+                     </otherwise>
+                 </choose>
+            </if>
+            <if test="procDefKey != null">
+                and def.KEY_ = #{procDefKey}
+            </if>
+            <if test="procInstInitiator != null">
+                and instance.START_USER_ID_ = #{procInstInitiator}
+            </if>
+            <if test="procInstStartTimeBefore != null">
+                and instance.START_TIME_ <![CDATA[ <= ]]> #{procInstStartTimeBefore}
+            </if>
+            <if test="procInstStartTimeAfter != null">
+                and instance.START_TIME_ <![CDATA[ >= ]]>  #{procInstStartTimeAfter}
+            </if>
+        </where>
+        order by task.START_TIME_ desc
+        <if test="offset != null and size != null">
+         LIMIT #{offset}, #{size}
+        </if>
+    </select>
+
+    <select id="count" resultType="java.lang.Long"
+            parameterType="com.dogfood.aa20240808.processV2.system.domain.structure.CustomTaskQuery">
+        select count(distinct task.ID_) as total
+        FROM ${process_table_prefix}ACT_HI_TASKINST task
+        left join ${process_table_prefix}ACT_HI_PROCINST instance on task.PROC_INST_ID_ = instance.ID_
+        left join ${process_table_prefix}ACT_RE_PROCDEF def on instance.PROC_DEF_ID_ = def.ID_
+        <where>
+            task.CATEGORY_ in  ('ApprovalTask', 'SubmitTask' )
+            <choose>
+                <when test="finished !=null and finished">
+                    and task.END_TIME_ is not null and (task.DELETE_REASON_ = '' or task.DELETE_REASON_ is null)
+                </when>
+                <otherwise>
+                    and task.END_TIME_ is null
+                </otherwise>
+            </choose>
+            <if test="userName != null">
+                and task.ASSIGNEE_ = #{userName}
+            </if>
+            <if test="procDefKey != null">
+                and def.KEY_ = #{procDefKey}
+            </if>
+            <if test="procInstInitiator != null">
+                and instance.START_USER_ID_ = #{procInstInitiator}
+            </if>
+            <if test="procInstStartTimeBefore != null">
+                and instance.START_TIME_ <![CDATA[ <= ]]> #{procInstStartTimeBefore}
+            </if>
+            <if test="procInstStartTimeAfter != null">
+                and instance.START_TIME_ <![CDATA[ >= ]]>  #{procInstStartTimeAfter}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="selectCCTaskList" resultMap="customTaskResultMap"
+            parameterType="com.dogfood.aa20240808.processV2.system.domain.structure.CCTaskQuery">
+        select distinct task.ID_ as taskId,task.START_TIME_,task.NAME_ as taskTitle,task.PROC_INST_ID_, instance.NAME_ as procInstTitle, def.NAME_ as
+        procDefTitle,instance.START_USER_ID_, instance.START_TIME_,link.USER_ID_
+        from ${process_table_prefix}ACT_HI_TASKINST task
+        left join ${process_table_prefix}ACT_HI_IDENTITYLINK link on link.TASK_ID_ = task.ID_
+        left join ${process_table_prefix}ACT_HI_PROCINST instance on task.PROC_INST_ID_ = instance.ID_
+        left join ${process_table_prefix}ACT_RE_PROCDEF def on instance.PROC_DEF_ID_ = def.ID_
+        <where>
+            task.CATEGORY_ = 'CCTask'
+            and task.END_TIME_ is not null and (task.DELETE_REASON_ = '' or task.DELETE_REASON_ is null)
+            and link.TYPE_ = 'candidate' and link.USER_ID_ = #{userName}  and task.ASSIGNEE_ is null
+            <if test="viewed != null">
+                and <if test="viewed == false"> NOT </if> EXISTS (
+                    select VARINST.ID_
+                    from ${process_table_prefix}ACT_HI_VARINST VARINST
+                    where VARINST.TASK_ID_ = task.ID_ and  VARINST.NAME_ = #{variableName}
+                )
+            </if>
+            <if test="procDefKey != null">
+                and def.KEY_ = #{procDefKey}
+            </if>
+            <if test="procInstInitiator != null">
+                and instance.START_USER_ID_ = #{procInstInitiator}
+            </if>
+            <if test="procInstStartTimeBefore != null">
+                and instance.START_TIME_ <![CDATA[ <= ]]> #{procInstStartTimeBefore}
+            </if>
+            <if test="procInstStartTimeAfter != null">
+                and instance.START_TIME_ <![CDATA[ >= ]]>  #{procInstStartTimeAfter}
+            </if>
+        </where>
+        order by task.START_TIME_ desc
+        <if test="offset != null and size != null">
+         LIMIT #{offset}, #{size}
+        </if>
+    </select>
+
+    <select id="countCCTask" resultType="java.lang.Long"
+            parameterType="com.dogfood.aa20240808.processV2.system.domain.structure.CCTaskQuery">
+        select count(distinct task.ID_) as total
+        FROM ${process_table_prefix}ACT_HI_TASKINST task
+        left join ${process_table_prefix}ACT_HI_IDENTITYLINK link on link.TASK_ID_ = task.ID_
+        left join ${process_table_prefix}ACT_HI_PROCINST instance on task.PROC_INST_ID_ = instance.ID_
+        left join ${process_table_prefix}ACT_RE_PROCDEF def on instance.PROC_DEF_ID_ = def.ID_
+        <where>
+            task.CATEGORY_ = 'CCTask'
+            and task.END_TIME_ is not null and (task.DELETE_REASON_ = '' or task.DELETE_REASON_ is null)
+            and link.TYPE_ = 'candidate' and link.USER_ID_ = #{userName}  and task.ASSIGNEE_ is null
+            <if test="viewed != null">
+                and <if test="viewed == false"> NOT </if> EXISTS (
+                    select VARINST.ID_
+                    from ${process_table_prefix}ACT_HI_VARINST VARINST
+                    where VARINST.TASK_ID_ = task.ID_ and  VARINST.NAME_ = #{variableName}
+                )
+            </if>
+            <if test="procDefKey != null">
+                and def.KEY_ = #{procDefKey}
+            </if>
+            <if test="procInstInitiator != null">
+                and instance.START_USER_ID_ = #{procInstInitiator}
+            </if>
+            <if test="procInstStartTimeBefore != null">
+                and instance.START_TIME_ <![CDATA[ <= ]]> #{procInstStartTimeBefore}
+            </if>
+            <if test="procInstStartTimeAfter != null">
+                and instance.START_TIME_ <![CDATA[ >= ]]>  #{procInstStartTimeAfter}
+            </if>
+        </where>
+
+    </select>
+
+</mapper>

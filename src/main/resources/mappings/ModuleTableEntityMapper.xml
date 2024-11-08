@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+  automatically generated ModuleTableEntity Mapper xml
+-->
+<mapper namespace="com.dogfood.aa20240808.repository.entities.ModuleTableEntityMapper">
+    <resultMap id="BaseResultMap" type="com.dogfood.aa20240808.domain.entities.ModuleTableEntity">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+        <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+        <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+        <result column="updated_by" jdbcType="VARCHAR" property="updatedBy" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+    </resultMap>
+
+    <!--
+       ###################################################
+       ######### mysql
+       ###################################################
+     -->
+    <insert id="insert" parameterType="com.dogfood.aa20240808.domain.entities.ModuleTableEntity"  >
+        INSERT INTO `ModuleTable` (
+            `id`
+            ,`created_time`
+            ,`updated_time`
+            ,`created_by`
+            ,`updated_by`
+            ,`name`
+        )
+        VALUES (
+            #{id,jdbcType=BIGINT}
+            ,#{createdTime,jdbcType=TIMESTAMP}
+            ,#{updatedTime,jdbcType=TIMESTAMP}
+            ,#{createdBy,jdbcType=VARCHAR}
+            ,#{updatedBy,jdbcType=VARCHAR}
+            ,#{name,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <insert id="batchInsert"  parameterType="java.util.List" >
+        INSERT INTO `ModuleTable` (
+            `id`
+            ,`created_time`
+            ,`updated_time`
+            ,`created_by`
+            ,`updated_by`
+            ,`name`
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+            #{item.id,jdbcType=BIGINT}
+            ,#{item.createdTime,jdbcType=TIMESTAMP}
+            ,#{item.updatedTime,jdbcType=TIMESTAMP}
+            ,#{item.createdBy,jdbcType=VARCHAR}
+            ,#{item.updatedBy,jdbcType=VARCHAR}
+            ,#{item.name,jdbcType=VARCHAR}
+         )
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="com.dogfood.aa20240808.domain.entities.ModuleTableEntity" >
+        <bind name="paramValues" value="@com.dogfood.aa20240808.util.SqlAspectUtils@listParamValues('defaultDS.ModuleTable')" />
+        UPDATE `ModuleTable`
+        <set>
+            <if test="updateFields == null or updateFields.contains('createdTime')">`created_time` = ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildAssignment('defaultDS','ModuleTable','createdTime','bean.createdTime, jdbcType= TIMESTAMP')},</if>
+            <if test="updateFields == null or updateFields.contains('updatedTime')">`updated_time` = ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildAssignment('defaultDS','ModuleTable','updatedTime','bean.updatedTime, jdbcType= TIMESTAMP')},</if>
+            <if test="updateFields == null or updateFields.contains('createdBy')">`created_by` = ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildAssignment('defaultDS','ModuleTable','createdBy','bean.createdBy, jdbcType= VARCHAR')},</if>
+            <if test="updateFields == null or updateFields.contains('updatedBy')">`updated_by` = ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildAssignment('defaultDS','ModuleTable','updatedBy','bean.updatedBy, jdbcType= VARCHAR')},</if>
+            <if test="updateFields == null or updateFields.contains('name')">`name` = ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildAssignment('defaultDS','ModuleTable','name','bean.name, jdbcType= VARCHAR')},</if>
+        </set>
+        where `id` = #{bean.id}
+            and ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildWhereCondition('defaultDS','ModuleTable','`ModuleTable`','whereClause')}
+    </update>
+
+    <update id="batchUpdate" parameterType="com.dogfood.aa20240808.domain.entities.ModuleTableEntity" >
+        <bind name="paramValues" value="@com.dogfood.aa20240808.util.SqlAspectUtils@listParamValues('defaultDS.ModuleTable')" />
+        UPDATE `ModuleTable`
+        <set>
+            <if test="updateFields == null or updateFields.contains('createdTime')">
+                `created_time` = CASE `id`
+                <foreach collection="beans" item="bean" index="index" separator=" ">
+                    WHEN #{bean.id} THEN #{bean.createdTime, jdbcType=TIMESTAMP}
+                </foreach>
+                END,
+            </if>
+            <if test="updateFields == null or updateFields.contains('updatedTime')">
+                `updated_time` = CASE `id`
+                <foreach collection="beans" item="bean" index="index" separator=" ">
+                    WHEN #{bean.id} THEN #{bean.updatedTime, jdbcType=TIMESTAMP}
+                </foreach>
+                END,
+            </if>
+            <if test="updateFields == null or updateFields.contains('createdBy')">
+                `created_by` = CASE `id`
+                <foreach collection="beans" item="bean" index="index" separator=" ">
+                    WHEN #{bean.id} THEN #{bean.createdBy, jdbcType=VARCHAR}
+                </foreach>
+                END,
+            </if>
+            <if test="updateFields == null or updateFields.contains('updatedBy')">
+                `updated_by` = CASE `id`
+                <foreach collection="beans" item="bean" index="index" separator=" ">
+                    WHEN #{bean.id} THEN #{bean.updatedBy, jdbcType=VARCHAR}
+                </foreach>
+                END,
+            </if>
+            <if test="updateFields == null or updateFields.contains('name')">
+                `name` = CASE `id`
+                <foreach collection="beans" item="bean" index="index" separator=" ">
+                    WHEN #{bean.id} THEN #{bean.name, jdbcType=VARCHAR}
+                </foreach>
+                END,
+            </if>
+        </set>
+        where `id` in
+        <foreach collection="beans" item="bean" index="index" separator="," open="(" close=")">
+            #{bean.id}
+        </foreach>
+            and ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildWhereCondition('defaultDS','ModuleTable','`ModuleTable`','whereClause')}
+    </update>
+
+
+    <delete id="delete" parameterType="java.lang.Long" >
+        <bind name="paramValues" value="@com.dogfood.aa20240808.util.SqlAspectUtils@listParamValues('defaultDS.ModuleTable')" />
+        DELETE FROM `ModuleTable` where `id` = #{id}
+            and ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildWhereCondition('defaultDS','ModuleTable','`ModuleTable`','whereClause')}
+    </delete>
+
+
+    <delete id="batchDelete" >
+        <bind name="paramValues" value="@com.dogfood.aa20240808.util.SqlAspectUtils@listParamValues('defaultDS.ModuleTable')" />
+        DELETE FROM `ModuleTable` where `id` in
+        <foreach collection="list" item="pkValueItem" index="index"  separator="," open="(" close=")">
+            #{pkValueItem}
+        </foreach>
+            and ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildWhereCondition('defaultDS','ModuleTable','`ModuleTable`','whereClause')}
+    </delete>
+
+    <delete id="deleteReference">
+        <bind name="paramValues" value="@com.dogfood.aa20240808.util.SqlAspectUtils@listParamValues('defaultDS.ModuleTable')" />
+        DELETE FROM `ModuleTable`
+        <where>
+            <choose>
+                <when test="property == 'id'">
+                    AND `id` = #{value, jdbcType=BIGINT}
+                </when>
+                <when test="property == 'createdTime'">
+                    AND `created_time` = #{value, jdbcType=TIMESTAMP}
+                </when>
+                <when test="property == 'updatedTime'">
+                    AND `updated_time` = #{value, jdbcType=TIMESTAMP}
+                </when>
+                <when test="property == 'createdBy'">
+                    AND `created_by` = #{value, jdbcType=VARCHAR}
+                </when>
+                <when test="property == 'updatedBy'">
+                    AND `updated_by` = #{value, jdbcType=VARCHAR}
+                </when>
+                <when test="property == 'name'">
+                    AND `name` = #{value, jdbcType=VARCHAR}
+                </when>
+                <otherwise>
+                    MUST BE ERROR
+                </otherwise>
+            </choose>
+            and ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildWhereCondition('defaultDS','ModuleTable','`ModuleTable`','whereClause')}
+        </where>
+    </delete>
+
+    <select id="existReference" resultType="java.lang.Long" >
+        <bind name="paramValues" value="@com.dogfood.aa20240808.util.SqlAspectUtils@listParamValues('defaultDS.ModuleTable')" />
+        select `id` from `ModuleTable` 
+        <where>
+            <choose>
+                <when test="property == 'id'">
+                    AND `id` = #{value, jdbcType=BIGINT}
+                </when>
+                <when test="property == 'createdTime'">
+                    AND `created_time` = #{value, jdbcType=TIMESTAMP}
+                </when>
+                <when test="property == 'updatedTime'">
+                    AND `updated_time` = #{value, jdbcType=TIMESTAMP}
+                </when>
+                <when test="property == 'createdBy'">
+                    AND `created_by` = #{value, jdbcType=VARCHAR}
+                </when>
+                <when test="property == 'updatedBy'">
+                    AND `updated_by` = #{value, jdbcType=VARCHAR}
+                </when>
+                <when test="property == 'name'">
+                    AND `name` = #{value, jdbcType=VARCHAR}
+                </when>
+                <otherwise>
+                    MUST BE ERROR
+                </otherwise>
+            </choose>
+            and ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildWhereCondition('defaultDS','ModuleTable','`ModuleTable`','whereClause')}
+        </where>
+         LIMIT 1
+    </select>
+
+
+    <select id="selectOne" resultMap="BaseResultMap" >
+         <bind name="paramValues" value="@com.dogfood.aa20240808.util.SqlAspectUtils@listParamValues('defaultDS.ModuleTable')" />
+        select ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildSelectExpr('defaultDS','ModuleTable','id','`id`')}, ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildSelectExpr('defaultDS','ModuleTable','createdTime','`created_time`')}, ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildSelectExpr('defaultDS','ModuleTable','updatedTime','`updated_time`')}, ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildSelectExpr('defaultDS','ModuleTable','createdBy','`created_by`')}, ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildSelectExpr('defaultDS','ModuleTable','updatedBy','`updated_by`')}, ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildSelectExpr('defaultDS','ModuleTable','name','`name`')}
+        from `ModuleTable`
+        where `id`=#{id}
+              and ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildWhereCondition('defaultDS','ModuleTable','`ModuleTable`','whereClause')}
+    </select>
+
+    <insert id="createOrUpdate" parameterType="com.dogfood.aa20240808.domain.entities.ModuleTableEntity">
+        INSERT INTO `ModuleTable` (
+            `id`
+            ,`created_time`
+            ,`updated_time`
+            ,`created_by`
+            ,`updated_by`
+            ,`name`
+        )
+        VALUES (
+            #{id,jdbcType=BIGINT}
+            ,#{createdTime,jdbcType=TIMESTAMP}
+            ,#{updatedTime,jdbcType=TIMESTAMP}
+            ,#{createdBy,jdbcType=VARCHAR}
+            ,#{updatedBy,jdbcType=VARCHAR}
+            ,#{name,jdbcType=VARCHAR}
+        )
+    </insert>
+
+
+    <update id="updateBy">
+        <bind name="paramValues" value="@com.dogfood.aa20240808.util.SqlAspectUtils@listParamValues('defaultDS.ModuleTable')" />
+        UPDATE `ModuleTable`
+        <set>
+        <if test="updateFields == null or updateFields.contains('createdTime')">`created_time` = ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildAssignment('defaultDS','ModuleTable','createdTime','bean.createdTime, jdbcType= TIMESTAMP')},</if>
+        <if test="updateFields == null or updateFields.contains('updatedTime')">`updated_time` = ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildAssignment('defaultDS','ModuleTable','updatedTime','bean.updatedTime, jdbcType= TIMESTAMP')},</if>
+        <if test="updateFields == null or updateFields.contains('createdBy')">`created_by` = ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildAssignment('defaultDS','ModuleTable','createdBy','bean.createdBy, jdbcType= VARCHAR')},</if>
+        <if test="updateFields == null or updateFields.contains('updatedBy')">`updated_by` = ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildAssignment('defaultDS','ModuleTable','updatedBy','bean.updatedBy, jdbcType= VARCHAR')},</if>
+        <if test="updateFields == null or updateFields.contains('name')">`name` = ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildAssignment('defaultDS','ModuleTable','name','bean.name, jdbcType= VARCHAR')},</if>
+        </set>
+        where (${filter.sql("mysql")} and 1=1) and ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildWhereCondition('defaultDS','ModuleTable','`ModuleTable`','whereClause')} 
+
+    </update>
+
+    <delete id="deleteBy" parameterType="com.dogfood.aa20240808.service.dto.filters.AbstractQueryFilter">
+        <bind name="paramValues" value="@com.dogfood.aa20240808.util.SqlAspectUtils@listParamValues('defaultDS.ModuleTable')" />
+        DELETE FROM `ModuleTable`
+        where (${filter.sql("mysql")} and 1=1) and ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildWhereCondition('defaultDS','ModuleTable','`ModuleTable`','whereClause')} 
+    </delete>
+    <select id="selectList" parameterType="com.dogfood.aa20240808.service.dto.filters.AbstractQueryFilter" resultMap="BaseResultMap" >
+        <bind name="paramValues" value="@com.dogfood.aa20240808.util.SqlAspectUtils@listParamValues('defaultDS.ModuleTable')" />
+        select ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildSelectExpr('defaultDS','ModuleTable','id','`id`')}, ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildSelectExpr('defaultDS','ModuleTable','createdTime','`created_time`')}, ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildSelectExpr('defaultDS','ModuleTable','updatedTime','`updated_time`')}, ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildSelectExpr('defaultDS','ModuleTable','createdBy','`created_by`')}, ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildSelectExpr('defaultDS','ModuleTable','updatedBy','`updated_by`')}, ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildSelectExpr('defaultDS','ModuleTable','name','`name`')}
+        from `ModuleTable`
+        <where>
+            <trim prefix="(" suffix=")" prefixOverrides="and | or">
+                ${filter.sql("mysql")} and 1=1
+            </trim>
+            and ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildWhereCondition('defaultDS','ModuleTable','`ModuleTable`','whereClause')}
+        </where>
+    </select>
+
+    <select id="count" parameterType="com.dogfood.aa20240808.service.dto.filters.AbstractQueryFilter" resultType="java.lang.Integer" >
+        <bind name="paramValues" value="@com.dogfood.aa20240808.util.SqlAspectUtils@listParamValues('defaultDS.ModuleTable')" />
+        select count(1) from `ModuleTable`
+        <where>
+            <trim prefix="(" suffix=")" prefixOverrides="and | or">
+                ${filter.sql("mysql")} and 1=1
+            </trim>
+            and ${@com.dogfood.aa20240808.util.SqlAspectUtils@buildWhereCondition('defaultDS','ModuleTable','`ModuleTable`','whereClause')}
+        </where>
+    </select>
+</mapper>

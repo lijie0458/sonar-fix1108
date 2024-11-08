@@ -1,0 +1,189 @@
+management:
+  server:
+    port: 9090
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: ${spring.application.id}
+  endpoints:
+    web:
+      base-path: /management
+      exposure:
+        include:
+        - health
+        - prometheus
+logging:
+  file:
+    path: ${user.home}
+  path: ${logging.file.path}
+spring:
+  mvc:
+    static-path-pattern: /**
+  resources:
+    static-locations[0]: classpath:/static/
+    static-locations[1]: classpath:/static/assets/
+    static-locations[2]: classpath:/static/packages/
+  main:
+    lazy-initialization: false
+  application:
+    name: aa20240808
+    id: a6d592c6-0441-4ebc-835d-a14d6191f045
+  liquibase:
+    enabled: false
+  initDatabase:
+    enabled: false
+  quartz:
+    enabled: true
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.36.11:3306/dogfood-dev-aa20240808-fgwhKW?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&zeroDateTimeBehavior=CONVERT_TO_NULL
+    username: dogfo_fYm2t_user
+    password: ''
+    connection-timeout: 3000
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  messages:
+    basename: i18n/messages
+mybatis:
+  mapper-locations: classpath*:mappings/**/*Mapper.xml
+  type-handlers-package: com.dogfood.aa20240808.repository.handler
+  configuration:
+    database-id: mysql
+    default-enum-type-handler: com.dogfood.aa20240808.repository.handler.AutoEnumTypeHandler
+    log-impl: org.apache.ibatis.logging.log4j2.Log4j2Impl
+    call-setters-on-nulls: true
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css, application/javascript, application/json
+    min-response-size: 1024
+lcp:
+  snowflakeNodeId: null
+  authCenter:
+    enable: true
+    address: http://nuims.low-code:8081/nuims
+    host: nuims.low-code
+    security:
+      lockMilliseconds: 900000
+      maxFailureTimes: 5
+    taskEnable: true
+    noAuthPaths: /api/lcplogics/logic1:POST,/api/auth_library_template/oauthLogin:POST,/api/lcplogics/IAMFunctionLogic:POST,/api/auth_library_template/casLogin:POST,/api/auth_library_template/getWxQRCodeParam:POST,/api/lcplogics/IAMGetConfig:POST,/api/lcplogics/IAMGetIdentitySourceByState:POST,/api/auth_library_template/wxLogin:POST,/upload:POST,/upload/download_files:POST,/api/logics/downloadFile:POST,/api/logics/downloadFile:GET
+  gatewayUrl: ''
+  uiResourceAddress: /client.js
+  gatewayType: light
+  upload:
+    sinkType: nos
+    sinkPath: /app
+    s3Address: nos-eastchina1.126.net
+    s3AccessKey: ''
+    s3SecretKey: ''
+    s3Bucket: lcpapp-static-fork
+    access: private
+    ttl: -1.0
+    cdnAddress: ''
+  logResponse: false
+  logRequest: true
+  report:
+    host: ''
+    tokenKey: ''
+    domainId: null
+    projectId: null
+    reportIdMap: {}
+    componentIdMap: {}
+  nuims: http://nuims.low-code:8081
+  private: null
+  process:
+    database:
+      schema: ''
+      table:
+        prefix: PA6D592C_
+      isPlugin: false
+  frontends:
+    pc:
+      name: pc
+      path: /
+      title: PC端
+      type: pc
+  quartzTables:
+    SIMPROP_TRIGGERS: NA6D592C_SIMPROP_TRIGGERS
+    BLOB_TRIGGERS: NA6D592C_BLOB_TRIGGERS
+    TRIGGERS: NA6D592C_TRIGGERS
+    SIMPLE_TRIGGERS: NA6D592C_SIMPLE_TRIGGERS
+    LOCKS: NA6D592C_LOCKS
+    CRON_TRIGGERS: NA6D592C_CRON_TRIGGERS
+    FIRED_TRIGGERS: NA6D592C_FIRED_TRIGGERS
+    CALENDARS: NA6D592C_CALENDARS
+    JOB_DETAILS: NA6D592C_JOB_DETAILS
+    SCHEDULER_STATE: NA6D592C_SCHEDULER_STATE
+    PAUSED_TRIGGER_GRPS: NA6D592C_PAUSED_TRIGGER_GRPS
+upload:
+  base-path: app
+file:
+  types: text/plain;text/html;text/css;application/javascript
+extensions:
+  lcap_annotation_data_permission:
+    custom:
+      dataPermissionCacheExpireSeconds: '60'
+      dataPermissionCacheMaximumSize: '60'
+      skipLCAPEntity: 'true'
+  cw_oauth_library:
+    custom:
+      REDIRECT_URI: /page_config/callback
+logicAuthFlag: true
+auth:
+  token:
+    secret: dd6b515fbe8ce73
+    expire: 86400
+  plugin:
+    list:
+      Normal:
+        category: main
+  types: Normal
+  Normal: '{"category":"main"}'
+connector:
+  default_fileStorage_connection:
+    accessKey: ''
+    secretKey: ''
+    bucket: lcpapp-static-fork
+    privateBucket: 'true'
+    endpoint: nos-eastchina1.126.net
+    pathStyleAccessEnabled: 'false'
+    cdnAddress: null
+  rabb1:
+    host: 47.98.102.217
+    port: '5672'
+    userName: zsr
+    password: '123456'
+gw:
+  app:
+    addr:
+      codewave2024-OpenSSL: true
+      codewave2024: http://dogfood.lcap.163yun.com/
+      lowcode: http://lcap.low-code:22988
+      nuims: http://nuims.low-code:8081
+custom:
+  api:
+    context-path: /
+  system:
+    time-zone: user
+fileStorage:
+  lcap_default_connection: '{"refConnection":"","defaultConnection":true,"title":"系统文件存储"}'

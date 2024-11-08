@@ -1,0 +1,26 @@
+<u-form :ref="`form_1`" ref-name="form_1"  :id="`dynamicRenderContainer`" :processPrefix="`Process1`" :layout="`inline-flex`" :repeat="2" key="form_1">
+    <u-form-item :ref="`form_item_1`" ref-name="form_item_1"  :layout="`center`">
+        <template #label :ref="`template_1`" ref-name="template_1" >
+            <u-text :ref="`text_1`" ref-name="text_1"  :text="`创建时间`"></u-text>
+        </template>
+        <u-date-time-picker :ref="`date_time_picker_1`" ref-name="date_time_picker_1"  :clearable="true" :value.sync="processDetailFormData.data.createdTime" :placeholder="`请输入创建时间`"></u-date-time-picker>
+    </u-form-item>
+    <u-form-item :ref="`form_item_2`" ref-name="form_item_2"  :layout="`center`">
+        <template #label :ref="`template_2`" ref-name="template_2" >
+            <u-text :ref="`text_2`" ref-name="text_2"  :text="`更新时间`"></u-text>
+        </template>
+        <u-date-time-picker :ref="`date_time_picker_2`" ref-name="date_time_picker_2"  :clearable="true" :value.sync="processDetailFormData.data.updatedTime" :placeholder="`请输入更新时间`"></u-date-time-picker>
+    </u-form-item>
+    <u-form-item :ref="`form_item_3`" ref-name="form_item_3"  :layout="`center`">
+        <template #label :ref="`template_3`" ref-name="template_3" >
+            <u-text :ref="`text_3`" ref-name="text_3"  :text="`创建者`"></u-text>
+        </template>
+        <u-input :ref="`input_1`" ref-name="input_1"  :placeholder="`请输入创建者`" :value.sync="processDetailFormData.data.createdBy"></u-input>
+    </u-form-item>
+    <u-form-item :ref="`form_item_4`" ref-name="form_item_4"  :layout="`center`">
+        <template #label :ref="`template_4`" ref-name="template_4" >
+            <u-text :ref="`text_4`" ref-name="text_4"  :text="`更新者`"></u-text>
+        </template>
+        <u-input :ref="`input_2`" ref-name="input_2"  :placeholder="`请输入更新者`" :value.sync="processDetailFormData.data.updatedBy"></u-input>
+    </u-form-item>
+</u-form>

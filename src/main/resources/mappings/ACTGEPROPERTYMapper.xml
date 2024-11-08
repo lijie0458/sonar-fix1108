@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dogfood.aa20240808.repository.process.ACTGEPROPERTYMapper">
+    <select id="selectValueByName" resultType="string">
+        SELECT
+            VALUE_
+        FROM
+            ${process_table_prefix}ACT_GE_PROPERTY
+        WHERE
+            NAME_ = #{name}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO ${process_table_prefix}ACT_GE_PROPERTY (
+            NAME_,
+            VALUE_,
+            REV_
+        )
+        VALUES (
+            #{name},
+            #{value},
+            #{rev}
+        )
+    </insert>
+
+    <update id="updateValueByName">
+        UPDATE
+            ${process_table_prefix}ACT_GE_PROPERTY
+        SET
+            VALUE_ = #{value}
+        WHERE
+            NAME_ = #{name}
+    </update>
+</mapper>

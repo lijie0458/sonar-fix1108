@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="default">
+  <process id="Process_5e4679bb" name="流程1" isExecutable="true" xmlns:flowable="http://flowable.org/bpmn" flowable:naslVersion="1" flowable:naslStatus="designing">
+    <extensionElements>
+      <flowable:executionListener event="start" expression="${processEventService.triggerProcessStartEvent(execution)}"></flowable:executionListener>
+      <flowable:executionListener event="end" expression="${processEventService.triggerProcessEndEvent(execution)}"></flowable:executionListener>
+    </extensionElements>
+    <userTask id="Start" name="开始" flowable:candidateUsers="${processTaskAssigneeService.getAssigneeListVariableValue(execution)}" flowable:category="InitiateTask" xmlns:flowable="http://flowable.org/bpmn" flowable:destinationUrlMap="{}" flowable:fieldPermission="[{&quot;propertyName&quot;:&quot;data&quot;,&quot;permission&quot;:&quot;editable&quot;,&quot;subFieldPermissions&quot;:[{&quot;propertyName&quot;:&quot;id&quot;,&quot;permission&quot;:&quot;hidden&quot;,&quot;subFieldPermissions&quot;:[]},{&quot;propertyName&quot;:&quot;createdTime&quot;,&quot;permission&quot;:&quot;hidden&quot;,&quot;subFieldPermissions&quot;:[]},{&quot;propertyName&quot;:&quot;updatedTime&quot;,&quot;permission&quot;:&quot;hidden&quot;,&quot;subFieldPermissions&quot;:[]},{&quot;propertyName&quot;:&quot;createdBy&quot;,&quot;permission&quot;:&quot;hidden&quot;,&quot;subFieldPermissions&quot;:[]},{&quot;propertyName&quot;:&quot;updatedBy&quot;,&quot;permission&quot;:&quot;hidden&quot;,&quot;subFieldPermissions&quot;:[]}]}]" flowable:operatePermission="[{&quot;name&quot;:&quot;submit&quot;,&quot;operationEnabled&quot;:true,&quot;displayText&quot;:&quot;提交&quot;,&quot;commentRequired&quot;:false},{&quot;name&quot;:&quot;reassign&quot;,&quot;operationEnabled&quot;:true,&quot;displayText&quot;:&quot;转派&quot;,&quot;commentRequired&quot;:false},{&quot;name&quot;:&quot;withdraw&quot;,&quot;operationEnabled&quot;:true,&quot;displayText&quot;:&quot;撤回&quot;,&quot;commentRequired&quot;:false}]" flowable:elementTitle="开始">
+      <extensionElements>
+        <flowable:executionListener event="start" expression="${processEventService.triggerNodeStartEvent(execution)}"></flowable:executionListener>
+        <flowable:taskListener event="create" expression="${processEventService.triggerTaskCreateEvent(execution,task)}"></flowable:taskListener>
+        <flowable:taskListener event="complete" expression="${processEventService.triggerTaskCloseEvent(execution,task)}"></flowable:taskListener>
+      </extensionElements>
+    </userTask>
+    <endEvent id="End"></endEvent>
+    <userTask id="ApprovalTask1" name="审批任务1" flowable:candidateUsers="${processTaskAssigneeService.getAssigneeListVariableValue(execution)}" flowable:category="ApprovalTask" xmlns:flowable="http://flowable.org/bpmn" flowable:destinationUrlMap="{&quot;pc&quot;:&quot;/approveEntity1&quot;}" flowable:fieldPermission="[{&quot;propertyName&quot;:&quot;data&quot;,&quot;permission&quot;:&quot;editable&quot;,&quot;subFieldPermissions&quot;:[{&quot;propertyName&quot;:&quot;id&quot;,&quot;permission&quot;:&quot;hidden&quot;,&quot;subFieldPermissions&quot;:[]},{&quot;propertyName&quot;:&quot;createdTime&quot;,&quot;permission&quot;:&quot;hidden&quot;,&quot;subFieldPermissions&quot;:[]},{&quot;propertyName&quot;:&quot;updatedTime&quot;,&quot;permission&quot;:&quot;hidden&quot;,&quot;subFieldPermissions&quot;:[]},{&quot;propertyName&quot;:&quot;createdBy&quot;,&quot;permission&quot;:&quot;hidden&quot;,&quot;subFieldPermissions&quot;:[]},{&quot;propertyName&quot;:&quot;updatedBy&quot;,&quot;permission&quot;:&quot;hidden&quot;,&quot;subFieldPermissions&quot;:[]}]}]" flowable:operatePermission="[{&quot;name&quot;:&quot;approve&quot;,&quot;operationEnabled&quot;:true,&quot;displayText&quot;:&quot;同意&quot;,&quot;commentRequired&quot;:true},{&quot;name&quot;:&quot;reject&quot;,&quot;moveTo&quot;:&quot;nextNode&quot;,&quot;operationEnabled&quot;:true,&quot;displayText&quot;:&quot;拒绝&quot;,&quot;commentRequired&quot;:true},{&quot;name&quot;:&quot;reassign&quot;,&quot;operationEnabled&quot;:true,&quot;displayText&quot;:&quot;转派&quot;,&quot;commentRequired&quot;:false},{&quot;name&quot;:&quot;addSign&quot;,&quot;operationEnabled&quot;:false,&quot;displayText&quot;:&quot;加签&quot;,&quot;commentRequired&quot;:false}]" flowable:elementTitle="审批任务1">
+      <extensionElements>
+        <flowable:executionListener event="start" expression="${processEventService.triggerNodeStartEvent(execution)}"></flowable:executionListener>
+        <flowable:taskListener event="create" expression="${processEventService.triggerTaskCreateEvent(execution,task)}"></flowable:taskListener>
+        <flowable:taskListener event="complete" expression="${processEventService.triggerTaskCloseEvent(execution,task)}"></flowable:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="SequenceFlow1" sourceRef="Start" targetRef="ApprovalTask1"></sequenceFlow>
+    <sequenceFlow id="SequenceFlow2" sourceRef="ApprovalTask1" targetRef="End"></sequenceFlow>
+    <startEvent id="Process_5e4679bb_Start" flowable:initiator="system_initiator"></startEvent>
+    <sequenceFlow id="Process_5e4679bb_Start_to_InitiateTask" sourceRef="Process_5e4679bb_Start" targetRef="Start"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_Process_5e4679bb">
+    <bpmndi:BPMNPlane bpmnElement="Process_5e4679bb" id="BPMNPlane_Process_5e4679bb">
+      <bpmndi:BPMNShape bpmnElement="Start" id="BPMNShape_Start">
+        <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="200.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="End" id="BPMNShape_End">
+        <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="400.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ApprovalTask1" id="BPMNShape_ApprovalTask1">
+        <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="259.859375"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Process_5e4679bb_Start" id="BPMNShape_Process_5e4679bb_Start">
+        <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="200.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="SequenceFlow1" id="BPMNEdge_SequenceFlow1">
+        <omgdi:waypoint x="0.0" y="1.0"></omgdi:waypoint>
+        <omgdi:waypoint x="0.0" y="-1.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="SequenceFlow2" id="BPMNEdge_SequenceFlow2">
+        <omgdi:waypoint x="0.0" y="1.0"></omgdi:waypoint>
+        <omgdi:waypoint x="0.0" y="-1.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Process_5e4679bb_Start_to_InitiateTask" id="BPMNEdge_Process_5e4679bb_Start_to_InitiateTask">
+        <omgdi:waypoint x="0.0" y="1.0"></omgdi:waypoint>
+        <omgdi:waypoint x="0.0" y="-1.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
